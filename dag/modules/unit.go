@@ -157,11 +157,6 @@ type Unit struct {
 	ReceivedFrom interface{}
 }
 
-type OutPoint struct {
-	TxHash       common.Hash // reference Utxo struct key field
-	MessageIndex uint32      // message index in transaction
-	OutIndex     uint32
-}
 
 func (unit *Unit) IsEmpty() bool {
 	if unit == nil || len(unit.Txs) <= 0 {
@@ -170,13 +165,7 @@ func (unit *Unit) IsEmpty() bool {
 	return false
 }
 
-type Transactions []*Transaction
-type TxPoolTxs []*TxPoolTransaction
-type Transaction struct {
-	TxHash     common.Hash `json:"txhash" rlp:"-"`
-	TxMessages []Message   `json:"messages"`
-	Locktime   uint32      `json:"lock_time"`
-}
+
 
 type ChainIndex struct {
 	AssetID IDType16
@@ -278,35 +267,11 @@ func (msg *Message) CopyMessages(cpyMsg *Message) *Message {
 }
 
 /************************** Payload Details ******************************************/
-type PayloadMapStruct struct {
-	Key   string
-	Value interface{}
-}
 
 // Token exchange message and verify message
 // App: payment
-type PaymentPayload struct {
-	Inputs  []Input  `json:"inputs"`
-	Outputs []Output `json:"outputs"`
-}
 
-func NewOutPoint(hash *common.Hash, messageindex uint32, outindex uint32) *OutPoint {
-	return &OutPoint{
-		TxHash:       *hash,
-		MessageIndex: messageindex,
-		OutIndex:     outindex,
-	}
-}
 
-// NewTxOut returns a new bitcoin transaction output with the provided
-// transaction value and public key script.
-func NewTxOut(value uint64, pkScript []byte, asset Asset) *Output {
-	return &Output{
-		Value:    value,
-		PkScript: pkScript,
-		Asset:    asset,
-	}
-}
 
 type StateVersion struct {
 	Height  ChainIndex

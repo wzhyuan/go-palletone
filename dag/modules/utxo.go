@@ -36,11 +36,11 @@ var (
 	ASSET_INFO_PREFIX = []byte("ai")
 )
 
-type Asset struct {
+/*type Asset struct {
 	AssertId IDType16 `json:"assert_id"` // 资产类别
 	UniqueId IDType16 `json:"unique_id"` // every token has its unique id
 	ChainId  uint64   `json:"chain_id"`  // main chain id or sub-chain id
-}
+}*/
 
 func (asset *Asset) String() string {
 	data, err := rlp.EncodeToBytes(asset)
@@ -219,26 +219,7 @@ func KeyToOutpoint(key []byte) OutPoint {
 	return vout
 }
 
-type Output struct {
-	Value    uint64
-	PkScript []byte
-	Asset    Asset
-}
-type Input struct {
-	PreviousOutPoint OutPoint
-	SignatureScript  []byte
-	Extra            []byte // if user creating a new asset, this field should be it's config data. Otherwise it is null.
-}
 
-// NewTxIn returns a new ptn transaction input with the provided
-// previous outpoint point and signature script with a default sequence of
-// MaxTxInSequenceNum.
-func NewTxIn(prevOut *OutPoint, signatureScript []byte) *Input {
-	return &Input{
-		PreviousOutPoint: *prevOut,
-		SignatureScript:  signatureScript,
-	}
-}
 
 type SpendProof struct {
 	Unit string `json:"unit"`
