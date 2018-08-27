@@ -93,6 +93,12 @@ func (t *Transaction) SetHash(hash common.Hash) {
 	}
 }
 
+func NewPaymentPayload() *PaymentPayload {
+	return &PaymentPayload{
+		Input:    make([]*Input, 0, defaultTxInOutAlloc),
+		Output:   make([]*Output, 0, defaultTxInOutAlloc),
+	}
+}
 type TxPoolTransaction struct {
 	Transaction
 
@@ -519,6 +525,7 @@ func (msg *Transaction) SerializeSize() int {
 //	msg.Input = append(msg.Input, ti)
 //}
 const HashSize = 32
+const defaultTxInOutAlloc = 15
 type Hash [HashSize]byte
 // DoubleHashH calculates hash(hash(b)) and returns the resulting bytes as a
 // Hash.
