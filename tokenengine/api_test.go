@@ -68,7 +68,14 @@ func buildTx() *modules.PaymentPayload {
 	opreturn, _ := txscript.NewScriptBuilder().AddOp(txscript.OP_RETURN).AddData(data).Script()
 	tx.AddTxOut(modules.NewTxOut(1, opreturn,ast)) //0.00000001 BTC
 	buf := bytes.NewBuffer(make([]byte, 0, tx.SerializeSize()))
+	buf.Grow(tx.SerializeSize())
 	_ = tx.Serialize(buf)
+	mtxbt ,err := rlp.EncodeToBytes(buf)
+	if err != nil {
+		return "", err
+	}
+	txHex := hex.EncodeToString(mtxbt)
+	fmt.Println(txHex)
 	fmt.Printf("RawTX:%x\n", buf.Bytes())
 
 	//fmt.Printf("Hash:%x\n", chainhash.HashB(buf.Bytes()))
