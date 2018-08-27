@@ -128,7 +128,7 @@ func (u *Unit) CopyBody(txs Transactions) Transactions {
 		for i, pTx := range txs {
 			tx := Transaction{
 				TxHash:   pTx.TxHash,
-				Locktime: pTx.Locktime,
+				//Locktime: pTx.Locktime,
 			}
 			if len(pTx.TxMessages) > 0 {
 				tx.TxMessages = make([]Message, len(pTx.TxMessages))
@@ -165,13 +165,13 @@ func (unit *Unit) IsEmpty() bool {
 	return false
 }
 
-type Transactions []*Transaction
+//type Transactions []*Transaction
 type TxPoolTxs []*TxPoolTransaction
-type Transaction struct {
-	TxHash     common.Hash `json:"txhash" rlp:"-"`
-	TxMessages []Message   `json:"messages"`
-	Locktime   uint32      `json:"lock_time"`
-}
+//type Transaction struct {
+//	TxHash     common.Hash `json:"txhash" rlp:"-"`
+//	TxMessages []Message   `json:"messages"`
+//	Locktime   uint32      `json:"lock_time"`
+//}
 
 type ChainIndex struct {
 	AssetID IDType16
@@ -204,10 +204,10 @@ var (
 )
 
 // key: message.UnitHash(message+timestamp)
-type Message struct {
-	App     string      `json:"app"`     // message type
-	Payload interface{} `json:"payload"` // the true transaction data
-}
+//type Message struct {
+//	App     string      `json:"app"`     // message type
+//	Payload interface{} `json:"payload"` // the true transaction data
+//}
 
 // return message struct
 func NewMessage(app string, payload interface{}) *Message {
@@ -525,7 +525,7 @@ func MsgstoAddress(msgs []Message) common.Address {
 		if !ok {
 			break
 		}
-		for _, pay := range payment.Inputs {
+		for _, pay := range payment.Input{
 			// 通过签名信息还原出address
 			from := new(common.Address)
 			from.SetBytes(pay.Extra[:])

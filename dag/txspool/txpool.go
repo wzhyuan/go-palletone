@@ -445,7 +445,7 @@ func TxtoTxpoolTx(txpool *TxPool, tx *modules.Transaction) *modules.TxPoolTransa
 	txpool_tx := new(modules.TxPoolTransaction)
 	txpool_tx.TxHash = tx.TxHash
 	txpool_tx.TxMessages = tx.TxMessages[:]
-	txpool_tx.Locktime = tx.Locktime
+	//txpool_tx.Locktime = tx.Locktime
 	txpool_tx.CreationDate = time.Now().Format(modules.TimeFormatString)
 	txpool_tx.Nonce = txpool.GetNonce(tx.TxHash) + 1
 	txpool_tx.Priority_lvl = txpool_tx.GetPriorityLvl()
@@ -455,7 +455,7 @@ func PooltxToTx(pooltx *modules.TxPoolTransaction) *modules.Transaction {
 	return &modules.Transaction{
 		TxHash:     pooltx.TxHash,
 		TxMessages: pooltx.TxMessages[:],
-		Locktime:   pooltx.Locktime,
+		//Locktime:   pooltx.Locktime,
 	}
 }
 func PoolTxstoTxs(pool_txs []*modules.TxPoolTransaction) []modules.Transaction {
@@ -464,7 +464,7 @@ func PoolTxstoTxs(pool_txs []*modules.TxPoolTransaction) []modules.Transaction {
 	for _, p_tx := range pool_txs {
 		tx.TxHash = p_tx.TxHash
 		tx.TxMessages = p_tx.TxMessages[:]
-		tx.Locktime = p_tx.Locktime
+		//tx.Locktime = p_tx.Locktime
 		txs = append(txs, *tx)
 	}
 	return txs

@@ -27,8 +27,6 @@ import (
 	//	"fmt"
 	"io"
     "encoding/binary"
-	"math/big"
-	//	"sync/atomic"
 	"math"
 	//
 	"github.com/palletone/go-palletone/common"
@@ -74,17 +72,17 @@ func NewContractCreation(msg []Message, lock uint32) *Transaction {
 func newTransaction(msg []Message, lock uint32) *Transaction {
 	tx := new(Transaction)
 	tx.TxMessages = msg[:]
-	tx.Locktime = lock
+	//tx.Locktime = lock
 
 	return tx
 }
 // AddTxIn adds a transaction input to the message.
 func (pld *PaymentPayload) AddTxIn(ti Input) {
-	pld.Inputs = append(pld.Inputs, ti)
+	pld.Input = append(pld.Input, &ti)
 }
 // AddTxOut adds a transaction output to the message.
 func (pld *PaymentPayload) AddTxOut(to Output) {
-	pld.Outputs = append(pld.Outputs, to)
+	pld.Output = append(pld.Output, &to)
 }
 
 func (t *Transaction) SetHash(hash common.Hash) {
@@ -227,7 +225,7 @@ func (tx *Transaction) Cost() *big.Int {
 
 func (tx *Transaction) CopyFrTransaction(cpy *Transaction) {
 	tx.TxHash.Set(cpy.TxHash)
-	tx.Locktime = cpy.Locktime
+	//tx.Locktime = cpy.Locktime
 	tx.TxMessages = make([]Message, len(cpy.TxMessages))
 	for _, msg := range cpy.TxMessages {
 		newMsg := Message{}
@@ -513,13 +511,13 @@ func (msg *Transaction) SerializeSize() int {
 	return n
 }
 // AddTxOut adds a transaction output to the message.
-func (msg *PaymentPayload) AddTxOut(to *Output) {
-	msg.Output = append(msg.Output, to)
-}
+//func (msg *PaymentPayload) AddTxOut(to *Output) {
+//	msg.Output = append(msg.Output, to)
+//}
 // AddTxIn adds a transaction input to the message.
-func (msg *PaymentPayload) AddTxIn(ti *Input) {
-	msg.Input = append(msg.Input, ti)
-}
+//func (msg *PaymentPayload) AddTxIn(ti *Input) {
+//	msg.Input = append(msg.Input, ti)
+//}
 const HashSize = 32
 type Hash [HashSize]byte
 // DoubleHashH calculates hash(hash(b)) and returns the resulting bytes as a

@@ -523,8 +523,8 @@ func ComputeFees(txs []*modules.TxPoolTransaction) (uint64, error) {
 			}
 			inAmount := uint64(0)
 			outAmount := uint64(0)
-			for _, txin := range payload.Inputs {
-				utxo := GetUxto(txin)
+			for _, txin := range payload.Input {
+				utxo := GetUxto(*txin)
 				if utxo.IsEmpty() {
 					return 0, fmt.Errorf("Txin(txhash=%s, msgindex=%v, outindex=%v)'s utxo is empty:",
 						txin.PreviousOutPoint.TxHash.String(),
