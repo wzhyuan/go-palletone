@@ -165,7 +165,13 @@ func (unit *Unit) IsEmpty() bool {
 	return false
 }
 
-
+type Transactions []*Transaction
+type TxPoolTxs []*TxPoolTransaction
+type Transaction struct {
+	TxHash     common.Hash `json:"txhash" rlp:"-"`
+	TxMessages []Message   `json:"messages"`
+	Locktime   uint32      `json:"lock_time"`
+}
 
 type ChainIndex struct {
 	AssetID IDType16
