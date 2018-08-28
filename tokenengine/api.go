@@ -87,11 +87,11 @@ func GenerateP2SHUnlockScript(signs [][]byte, redeemScript []byte) []byte {
 //validate this transaction and input index script can unlock the utxo.
 func ScriptValidate(utxoLockScript []byte, utxoAmount int64, tx *modules.PaymentPayload, inputIndex int) error {
 	vm, err := txscript.NewEngine(utxoLockScript, tx, 0, txscript.StandardVerifyFlags, nil, nil, utxoAmount)
-         fmt.Println("------------90")
 	if err != nil {
-                fmt.Println("------------92")
+                fmt.Println("---ScriptValidate-----error -------------92")
 		log.Error("Failed to create script: ", err)
 		return err
 	}
+        fmt.Println("ScriptValidate -----ok---line---------------95----")
 	return vm.Execute()
 }

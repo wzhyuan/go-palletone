@@ -28,6 +28,8 @@ func TestValidateTokenPayment(t *testing.T) {
 	tx := buildTx()
 	//hashCache := txscript.NewTxSigHashes(tx)
 	amount := int64(31980) //0.0003198 BTC
+        fmt.Printf("tx is -----31---test--%+v\n",tx)
+        fmt.Println(tx.Input)
 	// vm, err := txscript.NewEngine(lock, tx, 0, txscript.StandardVerifyFlags, nil, nil, amount)
 	// if err != nil {
 	// 	fmt.Errorf("Failed to create script: %v", err)
@@ -67,6 +69,7 @@ func buildTx() *modules.PaymentPayload {
 	data, _ := hex.DecodeString("e69bbee6b885e5928c2d3ee69bbee980b8e5a4ab28e69bbee78e89e5bfa0292d3ee69bbee4b8bee59bbd2d3ee69bbee6af85")
 	opreturn, _ := txscript.NewScriptBuilder().AddOp(txscript.OP_RETURN).AddData(data).Script()
 	tx.AddTxOut(*modules.NewTxOut(1, opreturn,ast)) //0.00000001 BTC
+        fmt.Printf("-----72  tx is %+v\n",tx)
 	buf := bytes.NewBuffer(make([]byte, 0, tx.SerializeSize()))
 	buf.Grow(tx.SerializeSize())
 	//_ = tx.Serialize(buf)
