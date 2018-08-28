@@ -883,6 +883,7 @@ func opcodeFalse(op *parsedOpcode, vm *Engine) error {
 // raw data (bytes) to the data stack.
 func opcodePushData(op *parsedOpcode, vm *Engine) error {
 	vm.dstack.PushByteArray(op.data)
+        fmt.Println("opceode  opcode opcode--------886   886   886  886 ")
 	return nil
 }
 

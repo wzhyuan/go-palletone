@@ -159,16 +159,19 @@ func (vm *Engine) isBranchExecuting() bool {
 // tested in this case.
 func (vm *Engine) executeOpcode(pop *parsedOpcode) error {
 	// Disabled opcodes are fail on program counter.
+        fmt.Println("162  162  162  -----")
 	if pop.isDisabled() {
 		str := fmt.Sprintf("attempt to execute disabled opcode %s",
 			pop.opcode.name)
+                fmt.Println("166  166  166 -----")
 		return scriptError(ErrDisabledOpcode, str)
 	}
-
+        fmt.Println("168  -----")
 	// Always-illegal opcodes are fail on program counter.
 	if pop.alwaysIllegal() {
 		str := fmt.Sprintf("attempt to execute reserved opcode %s",
 			pop.opcode.name)
+                fmt.Println("173   173  -----")
 		return scriptError(ErrReservedOpcode, str)
 	}
 
@@ -178,12 +181,14 @@ func (vm *Engine) executeOpcode(pop *parsedOpcode) error {
 		if vm.numOps > MaxOpsPerScript {
 			str := fmt.Sprintf("exceeded max operation limit of %d",
 				MaxOpsPerScript)
+                        fmt.Println("184-----184   -----")
 			return scriptError(ErrTooManyOperations, str)
 		}
 
 	} else if len(pop.data) > MaxScriptElementSize {
 		str := fmt.Sprintf("element size %d exceeds max allowed size %d",
 			len(pop.data), MaxScriptElementSize)
+                fmt.Println("------191   191  -----")
 		return scriptError(ErrElementTooBig, str)
 	}
 
@@ -199,11 +204,14 @@ func (vm *Engine) executeOpcode(pop *parsedOpcode) error {
 		pop.opcode.value >= 0 && pop.opcode.value <= OP_PUSHDATA4 {
 
 		if err := pop.checkMinimalDataPush(); err != nil {
+                        fmt.Println("2020020202020020777777777")
 			return err
 		}
 	}
-
-	return pop.opcode.opfunc(pop, vm)
+        fmt.Println("211 211 211 211")
+        k:=pop.opcode.opfunc(pop, vm)
+        fmt.Println(k)
+	return k
 }
 
 // disasm is a helper function to produce the output for DisasmPC and
@@ -443,6 +451,7 @@ func (vm *Engine) Step() (done bool, err error) {
 	// Verify that it is pointing to a valid script address.
 	err = vm.validPC()
 	if err != nil {
+                fmt.Println("446   446  446  446 -----")
 		return true, err
 	}
 	opcode := &vm.scripts[vm.scriptIdx][vm.scriptOff]
@@ -453,6 +462,7 @@ func (vm *Engine) Step() (done bool, err error) {
 	// script, maximum script element sizes, and conditionals.
 	err = vm.executeOpcode(opcode)
 	if err != nil {
+                fmt.Println("457   457   457 -----")
 		return true, err
 	}
 
@@ -529,6 +539,7 @@ func (vm *Engine) Step() (done bool, err error) {
 // for successful validation or an error if one occurred.
 func (vm *Engine) Execute() (err error) {
 	done := false
+        fmt.Println("------------532")
 	for !done {
 		dis, err := vm.DisasmPC()
 		if err != nil {
@@ -543,7 +554,6 @@ func (vm *Engine) Execute() (err error) {
 		}
 
 		var dstr, astr string
-
 		// if we're tracing, dump the stacks.
 		if vm.dstack.Depth() != 0 {
 			dstr = "Stack:\n" + vm.dstack.String()
@@ -553,9 +563,10 @@ func (vm *Engine) Execute() (err error) {
 		}
                 dstr= dstr 
                 astr = astr
+                 fmt.Println("------------556")
 		//log.Trace(dstr + astr)
 	}
-
+         fmt.Println("------------559")
 	return vm.CheckErrorCondition(true)
 }
 
@@ -802,7 +813,7 @@ func (vm *Engine) SetAltStack(data [][]byte) {
 // engine according to the description provided by each flag.
 func NewEngine(scriptPubKey []byte, tx *modules.PaymentPayload/**wire.MsgTx*/, txIdx int, flags ScriptFlags,
 	sigCache *SigCache, hashCache *TxSigHashes, inputAmount int64) (*Engine, error) {
-
+        fmt.Println("------------805")
 	// The provided transaction input index must refer to a valid input.
 	if txIdx < 0 || txIdx >= len(tx.Input) {
 		str := fmt.Sprintf("transaction input index %d is negative or "+
@@ -810,7 +821,7 @@ func NewEngine(scriptPubKey []byte, tx *modules.PaymentPayload/**wire.MsgTx*/, t
 		return nil, scriptError(ErrInvalidIndex, str)
 	}
 	scriptSig := tx.Input[txIdx].SignatureScript
-
+         fmt.Println("------------813")
 	// When both the signature script and public key script are empty the
 	// result is necessarily an error since the stack would end up being
 	// empty which is equivalent to a false top element.  Thus, just return
@@ -819,7 +830,7 @@ func NewEngine(scriptPubKey []byte, tx *modules.PaymentPayload/**wire.MsgTx*/, t
 		return nil, scriptError(ErrEvalFalse,
 			"false stack entry at end of script execution")
 	}
-
+         fmt.Println("------------822")
 	// The clean stack flag (ScriptVerifyCleanStack) is not allowed without
 	// either the pay-to-script-hash (P2SH) evaluation (ScriptBip16)
 	// flag or the Segregated Witness (ScriptVerifyWitness) flag.
@@ -837,7 +848,7 @@ func NewEngine(scriptPubKey []byte, tx *modules.PaymentPayload/**wire.MsgTx*/, t
 		return nil, scriptError(ErrInvalidFlags,
 			"invalid flags combination")
 	}
-
+         fmt.Println("------------840")
 	// The signature script must only contain data pushes when the
 	// associated flag is set.
 	if vm.hasFlag(ScriptVerifySigPushOnly) && !IsPushOnlyScript(scriptSig) {
@@ -883,7 +894,7 @@ func NewEngine(scriptPubKey []byte, tx *modules.PaymentPayload/**wire.MsgTx*/, t
 		vm.dstack.verifyMinimalData = true
 		vm.astack.verifyMinimalData = true
 	}
-
+         fmt.Println("------------886")
 	// Check to see if we should execute in witness verification mode
 	// according to the set flags. We check both the pkScript, and sigScript
 	// here since in the case of nested p2sh, the scriptSig will be a valid
@@ -931,9 +942,9 @@ func NewEngine(scriptPubKey []byte, tx *modules.PaymentPayload/**wire.MsgTx*/, t
 		}*/
 
 	}
-
+        fmt.Println("------------934")
 	vm.tx = *tx
 	vm.txIdx = txIdx
-
+         fmt.Println("------------937")
 	return &vm, nil
 }
