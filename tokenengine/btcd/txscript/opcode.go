@@ -2045,7 +2045,8 @@ func opcodeCodeSeparator(op *parsedOpcode, vm *Engine) error {
 //
 // Stack transformation: [... signature pubkey] -> [... bool]
 func opcodeCheckSig(op *parsedOpcode, vm *Engine) error {
-        fmt.Printf("------2048------opcodeCheckSig------------%+v\n",op)
+        fmt.Printf("---opcodeCheckSig--2048------%+v\n",op.opcode)
+        fmt.Printf("---opcodeCheckSig--2048------%+v\n",op.data)
 	pkBytes, err := vm.dstack.PopByteArray()
 	if err != nil {
 		return err
@@ -2092,6 +2093,7 @@ func opcodeCheckSig(op *parsedOpcode, vm *Engine) error {
 	subScript := vm.subScript()
 
 	// Generate the signature hash based on the signature hash type.
+        fmt.Println("----------opcode---------2096---------")
 	var hash []byte
 	if vm.isWitnessVersionActive(0) {
 		var sigHashes *TxSigHashes
@@ -2113,7 +2115,7 @@ func opcodeCheckSig(op *parsedOpcode, vm *Engine) error {
 
 		hash = calcSignatureHash(subScript, hashType, &vm.tx, vm.txIdx)
 	}
-
+        fmt.Println("------2118-----")
 	pubKey, err := btcec.ParsePubKey(pkBytes, btcec.S256())
 	if err != nil {
 		vm.dstack.PushBool(false)
@@ -2147,12 +2149,15 @@ func opcodeCheckSig(op *parsedOpcode, vm *Engine) error {
 		valid = signature.Verify(hash, pubKey)
 	}
 
+        fmt.Println("---------------2152----------------")
+        fmt.Println("-------2153-----",valid)
 	if !valid && vm.hasFlag(ScriptVerifyNullFail) && len(sigBytes) > 0 {
 		str := "signature not empty on failed checksig"
 		return scriptError(ErrNullFail, str)
 	}
-
+         fmt.Println("---------------2157----------------")
 	vm.dstack.PushBool(valid)
+        fmt.Println("-------------opcode-2159----")
 	return nil
 }
 
