@@ -456,6 +456,9 @@ func (vm *Engine) Step() (done bool, err error) {
 		return true, err
 	}
 	opcode := &vm.scripts[vm.scriptIdx][vm.scriptOff]
+        fmt.Println(vm.scriptIdx)
+        fmt.Println(vm.scriptOff)
+        fmt.Printf("-----step---- is -------%+v\n",opcode)
 	vm.scriptOff++
 
 	// Execute the opcode while taking into account several things such as

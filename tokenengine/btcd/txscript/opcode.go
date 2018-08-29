@@ -2045,6 +2045,7 @@ func opcodeCodeSeparator(op *parsedOpcode, vm *Engine) error {
 //
 // Stack transformation: [... signature pubkey] -> [... bool]
 func opcodeCheckSig(op *parsedOpcode, vm *Engine) error {
+        fmt.Printf("------2048------opcodeCheckSig------------%+v\n",op)
 	pkBytes, err := vm.dstack.PopByteArray()
 	if err != nil {
 		return err

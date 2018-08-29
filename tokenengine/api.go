@@ -92,6 +92,6 @@ func ScriptValidate(utxoLockScript []byte, utxoAmount int64, tx *modules.Payment
 		log.Error("Failed to create script: ", err)
 		return err
 	}
-        fmt.Println("ScriptValidate -----ok---line---------------95----")
+        fmt.Printf("ScriptValidate -----ok---line--95------vm is ----%+v\n",vm)
 	return vm.Execute()
 }
