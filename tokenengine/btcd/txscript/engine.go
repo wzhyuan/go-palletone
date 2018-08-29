@@ -159,19 +159,18 @@ func (vm *Engine) isBranchExecuting() bool {
 // tested in this case.
 func (vm *Engine) executeOpcode(pop *parsedOpcode) error {
 	// Disabled opcodes are fail on program counter.
-        fmt.Println("----executeOpcode----162  162  162  -----")
+        fmt.Printf("pop is %+v\n",pop.opcode)
+        fmt.Printf("data is %x\n",pop.data)
 	if pop.isDisabled() {
 		str := fmt.Sprintf("attempt to execute disabled opcode %s",
 			pop.opcode.name)
-                fmt.Println("166  166  166 -----")
+               // fmt.Println("166  166  166 -----")
 		return scriptError(ErrDisabledOpcode, str)
 	}
-        fmt.Println("------executeOpcode----------168  -----")
 	// Always-illegal opcodes are fail on program counter.
 	if pop.alwaysIllegal() {
 		str := fmt.Sprintf("attempt to execute reserved opcode %s",
 			pop.opcode.name)
-                fmt.Println("173   173  -----")
 		return scriptError(ErrReservedOpcode, str)
 	}
 
@@ -181,14 +180,12 @@ func (vm *Engine) executeOpcode(pop *parsedOpcode) error {
 		if vm.numOps > MaxOpsPerScript {
 			str := fmt.Sprintf("exceeded max operation limit of %d",
 				MaxOpsPerScript)
-                        fmt.Println("184-----184   -----")
 			return scriptError(ErrTooManyOperations, str)
 		}
 
 	} else if len(pop.data) > MaxScriptElementSize {
 		str := fmt.Sprintf("element size %d exceeds max allowed size %d",
 			len(pop.data), MaxScriptElementSize)
-                fmt.Println("------191   191  -----")
 		return scriptError(ErrElementTooBig, str)
 	}
 
@@ -208,9 +205,10 @@ func (vm *Engine) executeOpcode(pop *parsedOpcode) error {
 			return err
 		}
 	}
-        fmt.Println("-----------------executeOpcode----------211 211 211 211")
+//        fmt.Println("-----------------executeOpcode----------211 211 211 211")
+
         k:=pop.opcode.opfunc(pop, vm)
-        fmt.Println(k)
+  //      fmt.Println(k)
 	return k
 }
 
@@ -449,16 +447,17 @@ func (vm *Engine) CheckErrorCondition(finalScript bool) error {
 // returned.
 func (vm *Engine) Step() (done bool, err error) {
 	// Verify that it is pointing to a valid script address.
-         fmt.Println("step step ---begin---452 -----")
+         //fmt.Println("step step ---begin---452 -----")
 	err = vm.validPC()
 	if err != nil {
-                fmt.Println("446   446  446  446 -----")
+         //       fmt.Println("446   446  446  446 -----")
 		return true, err
 	}
 	opcode := &vm.scripts[vm.scriptIdx][vm.scriptOff]
-        fmt.Println(vm.scriptIdx)
-        fmt.Println(vm.scriptOff)
-        fmt.Printf("-----step---- is -------%+v\n",opcode)
+//        fmt.Println(vm.scriptIdx)
+
+//        fmt.Println(vm.scriptOff)
+        //fmt.Printf("-----step---- is -------%+v\n",opcode)
 	vm.scriptOff++
 
 	// Execute the opcode while taking into account several things such as
@@ -466,7 +465,7 @@ func (vm *Engine) Step() (done bool, err error) {
 	// script, maximum script element sizes, and conditionals.
 	err = vm.executeOpcode(opcode)
 	if err != nil {
-                fmt.Println("vm.step  step return nil is great --- 457   457   457 -----")
+           //     fmt.Println("vm.step  step return nil is great --- 457   457   457 -----")
 		return true, err
 	}
 
@@ -533,11 +532,12 @@ func (vm *Engine) Step() (done bool, err error) {
 		}
 		vm.lastCodeSep = 0
 		if vm.scriptIdx >= len(vm.scripts) {
-                         fmt.Println("step step ---return true---533 -----")
+     //                    fmt.Println("step step ---return true---533 -----")
 			return true, nil
 		}
 	}
-        fmt.Println("step step ---return false---537 -----")
+//        fmt.Println("step step ---return false---537 -----")
+
 	return false, nil
 }
 
@@ -546,7 +546,7 @@ func (vm *Engine) Step() (done bool, err error) {
 func (vm *Engine) Execute() (err error) {
 	done := false
 	for !done {
-                fmt.Println("this is a for until done is true")
+                //fmt.Println("this is a for until done is true")
 		dis, err := vm.DisasmPC()
 		if err != nil {
 			log.Error(fmt.Sprintf("stepping (%v)", err))
@@ -555,10 +555,10 @@ func (vm *Engine) Execute() (err error) {
 		//log.Trace(fmt.Sprintf("stepping %v", dis))
 
 		done, err = vm.Step()
-                fmt.Println("hahahhhahah---------------done is     ")
-                fmt.Println(done)
+                //fmt.Println("hahahhhahah---------------done is     ")
+                //fmt.Println(done)
 		if err != nil {
-                         fmt.Println("----engine----Execute-----556   return err ----")
+                         //fmt.Println("----engine----Execute-----556   return err ----")
 			return err
 		}
 
@@ -572,10 +572,10 @@ func (vm *Engine) Execute() (err error) {
 		}
                 dstr= dstr 
                 astr = astr
-                 fmt.Println("------------556")
+          //       fmt.Println("------------556")
 		//log.Trace(dstr + astr)
 	}
-         fmt.Println("--Execute ok----------559")
+         //fmt.Println("--Execute ok----------559")
 	return vm.CheckErrorCondition(true)
 }
 
@@ -954,6 +954,6 @@ func NewEngine(scriptPubKey []byte, tx *modules.PaymentPayload/**wire.MsgTx*/, t
         //fmt.Println("------------934")
 	vm.tx = *tx
 	vm.txIdx = txIdx
-        fmt.Println("-NewEngine    948   948 -----------948")
+        //fmt.Println("-NewEngine    948   948 -----------948")
 	return &vm, nil
 }
