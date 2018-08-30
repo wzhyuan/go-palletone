@@ -2146,6 +2146,8 @@ func opcodeCheckSig(op *parsedOpcode, vm *Engine) error {
 			valid = true
 		}
 	} else {
+                fmt.Printf("----------2149----%x\n",hash)
+                fmt.Printf("-------2150-----%+v\n",pubKey)
 		valid = signature.Verify(hash, pubKey)
 	}
 
