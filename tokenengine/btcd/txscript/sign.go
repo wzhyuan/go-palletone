@@ -157,6 +157,7 @@ func signMultiSig(tx *modules.PaymentPayload, idx int, subScript []byte, hashTyp
 func sign(chainParams *chaincfg.Params, tx *modules.PaymentPayload/**wire.MsgTx*/, idx int,
 	subScript []byte, hashType SigHashType, kdb KeyDB, sdb ScriptDB) ([]byte,
 	ScriptClass, []btcutil.Address, int, error) {
+        fmt.Println("print-----1-5999--------15999------sign---")
 	class, addresses, nrequired, err := ExtractPkScriptAddrs(subScript,
 		chainParams)
 	if err != nil {
@@ -165,6 +166,7 @@ func sign(chainParams *chaincfg.Params, tx *modules.PaymentPayload/**wire.MsgTx*
 	switch class {
 	case PubKeyTy:
 		// look up key for address
+                fmt.Println("PubKeyTy")
 		key , _, err := kdb.GetKey(addresses[0])
 		if err != nil {
 			return nil, class, nil, 0, err
@@ -178,7 +180,7 @@ func sign(chainParams *chaincfg.Params, tx *modules.PaymentPayload/**wire.MsgTx*
 		return script, class, addresses, nrequired, nil
 	case PubKeyHashTy:
 		// look up key for address
-        
+                fmt.Println("PubKeyHashTy")
 		key, compressed, err := kdb.GetKey(addresses[0])
 		if err != nil {
 			return nil, class, nil, 0, err
@@ -191,6 +193,7 @@ func sign(chainParams *chaincfg.Params, tx *modules.PaymentPayload/**wire.MsgTx*
 		}
 		return script, class, addresses, nrequired, nil
 	case ScriptHashTy:
+                fmt.Println("ScriptHashTy")
 		script, err := sdb.GetScript(addresses[0])
 		if err != nil {
 			return nil, class, nil, 0, err
@@ -198,6 +201,7 @@ func sign(chainParams *chaincfg.Params, tx *modules.PaymentPayload/**wire.MsgTx*
 
 		return script, class, addresses, nrequired, nil
 	case MultiSigTy:
+                 fmt.Println("MultiSigTy")
 		script, _ := signMultiSig(tx, idx, subScript, hashType,
 			addresses, nrequired, kdb)
                 //fmt.Println("sign      205   205   205 ------------")
