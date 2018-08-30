@@ -1309,14 +1309,16 @@ func CreateRawTransaction( /*s *rpcServer*/ cmd interface{}) (string, error) {
 		TxMessages: []modules.Message{msg},
 	}
 	mtx.TxHash = mtx.Hash()
-	
+        fmt.Printf("mtx is ------1312----------%+v\n",mtx)
 	mtxbt ,err := rlp.EncodeToBytes(mtx)
 	if err != nil {
 		return "", err
 	}
+        fmt.Printf("after rlp %x\n ",mtxbt)
 	//mtxHex, err := messageToHex(mtx)
 	mtxHex := hex.EncodeToString(mtxbt)
-	fmt.Println(mtxHex)
+        
+	fmt.Println("------1321---str  mtx is ",mtxHex)
 	return mtxHex, nil
 }
 func decodeHexStr(hexStr string) ([]byte, error) {
@@ -1405,15 +1407,23 @@ type (
 
 //sign rawtranscation
 func SignRawTransaction(icmd interface{}) (interface{}, error) {
+        fmt.Println("------1-410-----------")
 	cmd := icmd.(*btcjson.SignRawTransactionCmd)
+        fmt.Printf("------1412-----cmd is %+v\n",cmd)
 	serializedTx, err := decodeHexStr(cmd.RawTx)
+        
+        fmt.Println("------1414-------",serializedTx)
 	if err != nil {
+                fmt.Println("----------------1413----1413------")
 		return nil, err
 	}
 	var redeemTx modules.Transaction
 	if err := rlp.DecodeBytes(serializedTx, &redeemTx); err != nil {
+                fmt.Println("-------1420-------1420-----------------")
 		return nil, err
 	}
+        fmt.Printf("-----1419------1419-----sign receive tx-------%x\n",serializedTx)
+        fmt.Printf("------decode tx is %+v\n",redeemTx)
 	//err = redeemTx.Deserialize(bytes.NewBuffer(serializedTx))
 	//if err != nil {
 	//	return nil, err
@@ -1445,6 +1455,7 @@ func SignRawTransaction(icmd interface{}) (interface{}, error) {
 	if cmd.Inputs != nil {
 		cmdInputs = *cmd.Inputs
 	}
+        fmt.Println("------1458------1458--------")
 	for _, rti := range cmdInputs {
 		inputHash, err := common.NewHashFromStr(rti.Txid)
 		if err != nil {
@@ -1478,6 +1489,7 @@ func SignRawTransaction(icmd interface{}) (interface{}, error) {
 		}] = script
 	}
 
+        fmt.Println("------1492------------")
 	var keys map[string]*btcutil.WIF
 	if cmd.PrivKeys != nil {
 		keys = make(map[string]*btcutil.WIF)
@@ -1502,6 +1514,7 @@ func SignRawTransaction(icmd interface{}) (interface{}, error) {
 			}
 		}
 	}
+        fmt.Println("-------1517-------------")
     for _, msg := range redeemTx.TxMessages {
 			payload, ok := msg.Payload.(modules.PaymentPayload)
 			if ok == false {
@@ -1575,13 +1588,14 @@ func SignRawTransaction(icmd interface{}) (interface{}, error) {
 	buf.Grow(redeemTx.SerializeSize())
 	// All returned errors (not OOM, which panics) encounted during
 	// bytes.Buffer writes are unexpected.
-    mtxbt ,err := rlp.EncodeToBytes(buf)
+        mtxbt ,err := rlp.EncodeToBytes(redeemTx)
 	if err != nil {
 		return "", err
 	}
 	//mtxHex, err := messageToHex(mtx)
+        fmt.Printf("-----before------encode----1596------%+v\n",redeemTx)
 	signedHex := hex.EncodeToString(mtxbt)
-	fmt.Println(signedHex)
+	fmt.Println("------1597------after---signed---------",signedHex)
 	//if err = redeemTx.Serialize(&buf); err != nil {
 	//	panic(err)
 	//}
