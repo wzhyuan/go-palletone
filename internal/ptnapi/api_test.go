@@ -183,18 +183,19 @@ func TestSignTransaction(t *testing.T) {
 		scriptAddr, err := btcutil.NewAddressScriptHash(redeem, realNet)
 		scriptPkScript, err := txscript.PayToAddrScript(scriptAddr)
 		//multisig transaction need redeem for sign
-                for _, mtx := range tx.TxMessages {
+        for _, mtx := range tx.TxMessages {
 	        payload := mtx.Payload
                 payment, _ := payload.(modules.PaymentPayload)
-		for _, txinOne := range payment.Input {
-			rawInput := btcjson.RawTxInput{
-				txinOne.PreviousOutPoint.TxHash.String(), //txid
-				txinOne.PreviousOutPoint.OutIndex,         //outindex
-                                txinOne.PreviousOutPoint.MessageIndex,//messageindex
-				hex.EncodeToString(scriptPkScript),     //multisig pay script
-				signTransactionParams.RedeemHex}        //redeem
-			rawInputs = append(rawInputs, rawInput)
-		}}
+			for _, txinOne := range payment.Input {
+				rawInput := btcjson.RawTxInput{
+					txinOne.PreviousOutPoint.TxHash.String(), //txid
+					txinOne.PreviousOutPoint.OutIndex,         //outindex
+		            txinOne.PreviousOutPoint.MessageIndex,//messageindex
+					hex.EncodeToString(scriptPkScript),     //multisig pay script
+					signTransactionParams.RedeemHex}        //redeem
+				rawInputs = append(rawInputs, rawInput)
+			}
+	    }
 		break
 	}
         txHex := ""
@@ -203,7 +204,7 @@ func TestSignTransaction(t *testing.T) {
 		txHex =hex.EncodeToString(serializedTx)
 	}
        
-        send_args := btcjson.NewSignRawTransactionCmd(txHex, &rawInputs, &keys, btcjson.String("ALL"))
+    send_args := btcjson.NewSignRawTransactionCmd(txHex, &rawInputs, &keys, btcjson.String("ALL"))
 	//the return 'transactionhex' is used in next step
         
 	resultTransToMultsigAddr,err := SignRawTransaction(send_args)

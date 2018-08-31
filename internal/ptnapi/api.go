@@ -1301,23 +1301,22 @@ func CreateRawTransaction( /*s *rpcServer*/ cmd interface{}) (string, error) {
 	// is intentionally not directly returning because the first return
 	// value is a string and it would result in returning an empty string to
 	// the client instead of nothing (nil) in the case of an error.
-	msg := modules.Message{
+	msg := modules.Messagetmp{
 		App:         modules.APP_PAYMENT,
 		Payload:     pload,
 	}
-	mtx := modules.Transaction{
-		TxMessages: []modules.Message{msg},
+	mtx := modules.Transactiontmp{
+		TxMessages: []modules.Messagetmp{msg},
 	}
 	mtx.TxHash = mtx.Hash()
-        fmt.Printf("mtx is ------1312----------%+v\n",mtx)
+    fmt.Printf("mtx is ------1312----------%+v\n",mtx)
 	mtxbt ,err := rlp.EncodeToBytes(mtx)
 	if err != nil {
 		return "", err
 	}
-        fmt.Printf("after rlp %x\n ",mtxbt)
+    fmt.Printf("after rlp %x\n ",mtxbt)
 	//mtxHex, err := messageToHex(mtx)
 	mtxHex := hex.EncodeToString(mtxbt)
-        
 	fmt.Println("------1321---str  mtx is ",mtxHex)
 	return mtxHex, nil
 }
@@ -1417,7 +1416,7 @@ func SignRawTransaction(icmd interface{}) (interface{}, error) {
                 fmt.Println("----------------1413----1413------")
 		return nil, err
 	}
-	var redeemTx modules.Transaction
+	var redeemTx modules.Transactiontmp
 	if err := rlp.DecodeBytes(serializedTx, &redeemTx); err != nil {
                 fmt.Println("-------1420-------1420-----------------")
 		return nil, err
@@ -1489,7 +1488,7 @@ func SignRawTransaction(icmd interface{}) (interface{}, error) {
 		}] = script
 	}
 
-        fmt.Println("------1492------------")
+    fmt.Println("------1492------------")
 	var keys map[string]*btcutil.WIF
 	if cmd.PrivKeys != nil {
 		keys = make(map[string]*btcutil.WIF)
@@ -1578,7 +1577,7 @@ func SignRawTransaction(icmd interface{}) (interface{}, error) {
 			})
 		}
 	}
-	    msg := modules.Message{
+	    msg := modules.Messagetmp{
 			App:         modules.APP_PAYMENT,
 			Payload:     payload,
 		}
