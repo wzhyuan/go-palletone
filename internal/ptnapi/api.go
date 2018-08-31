@@ -1301,12 +1301,12 @@ func CreateRawTransaction( /*s *rpcServer*/ cmd interface{}) (string, error) {
 	// is intentionally not directly returning because the first return
 	// value is a string and it would result in returning an empty string to
 	// the client instead of nothing (nil) in the case of an error.
-	msg := modules.Messagetmp{
+	msg := modules.Message{
 		App:         modules.APP_PAYMENT,
 		Payload:     pload,
 	}
-	mtx := modules.Transactiontmp{
-		TxMessages: []modules.Messagetmp{msg},
+	mtx := modules.Transaction{
+		TxMessages: []modules.Message{msg},
 	}
 	mtx.TxHash = mtx.Hash()
     fmt.Printf("mtx is ------1312----------%+v\n",mtx)
@@ -1416,7 +1416,7 @@ func SignRawTransaction(icmd interface{}) (interface{}, error) {
                 fmt.Println("----------------1413----1413------")
 		return nil, err
 	}
-	var redeemTx modules.Transactiontmp
+	var redeemTx modules.Transaction
 	if err := rlp.DecodeBytes(serializedTx, &redeemTx); err != nil {
                 fmt.Println("-------1420-------1420-----------------")
 		return nil, err
@@ -1583,7 +1583,7 @@ func SignRawTransaction(icmd interface{}) (interface{}, error) {
 			})
 		}
 	}
-	    msg := modules.Messagetmp{
+	    msg := modules.Message{
 			App:         modules.APP_PAYMENT,
 			Payload:     payload,
 		}

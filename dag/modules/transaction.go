@@ -418,14 +418,6 @@ type Transaction struct {
 	CreationDate string  `json:"creation_date" rlp:"-"`
 	Priority_lvl float64 `json:"priority_lvl" rlp:"-"` // 打包的优先级
 }
-type Transactiontmp struct {
-	TxHash     common.Hash `json:"txhash"`
-	TxMessages []Messagetmp   `json:"messages"`
-	// todo AccountNonce, CreationDate, Priority_lvl 在交易池部分用的比较多，将由杨杰负责删除
-	AccountNonce uint64  `json:"account_nonce" rlp:"-"`
-	CreationDate string  `json:"creation_date" rlp:"-"`
-	Priority_lvl float64 `json:"priority_lvl" rlp:"-"` // 打包的优先级
-}
 type OutPoint struct {
  TxHash       common.Hash // reference Utxo struct key field
  MessageIndex uint32      // message index in transaction
@@ -442,11 +434,6 @@ func NewOutPoint(hash *common.Hash, messageindex uint32,outindex uint32) *OutPoi
 type Message struct {
 	App     string      `json:"app"`     // message type
 	Payload interface{} `json:"payload"` // the true transaction data
-}
-// key: message.UnitHash(message+timestamp)
-type Messagetmp struct {
-	App     string      `json:"app"`     // message type
-	Payload PaymentPayload `json:"payload"` // the true transaction data
 }
 /************************** Payload Details ******************************************/
 type PayloadMapStruct struct {
