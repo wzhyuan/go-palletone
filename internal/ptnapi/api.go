@@ -1314,7 +1314,7 @@ func CreateRawTransaction( /*s *rpcServer*/ cmd interface{}) (string, error) {
 	if err != nil {
 		return "", err
 	}
-    fmt.Printf("after rlp %x\n ",mtxbt)
+        fmt.Printf("---------1317--------------after rlp %x\n ",mtxbt)
 	//mtxHex, err := messageToHex(mtx)
 	mtxHex := hex.EncodeToString(mtxbt)
 	fmt.Println("------1321---str  mtx is ",mtxHex)
@@ -1514,12 +1514,16 @@ func SignRawTransaction(icmd interface{}) (interface{}, error) {
 		}
 	}
         fmt.Println("-------1517-------------")
+        fmt.Printf("%+v\n",redeemTx)
     for _, msg := range redeemTx.TxMessages {
-			payload, ok := msg.Payload.(modules.PaymentPayload)
-			if ok == false {
+			payload, _ := msg.Payload.(modules.PaymentPayload)
+                        fmt.Printf("-------%+v\n",payload)
+                        fmt.Printf("-----%+v\n",msg.App)
+			if msg.App != "payment" {
 				continue
 			}
-            for i, txIn := range payload.Input {
+                        fmt.Println("----------1523---------1523---------")
+                        for i, txIn := range payload.Input {
 			    prevOutScript, _ := inputpoints[txIn.PreviousOutPoint]
 
 		// Set up our callbacks that we pass to txscript so it can
@@ -1547,6 +1551,7 @@ func SignRawTransaction(icmd interface{}) (interface{}, error) {
 		// SigHashSingle inputs can only be signe   d if there's a
 		// corresponding output. However this could be already signed,
 		// so we always verify the output.
+                fmt.Println("-----------------1551-----------------------")
 		if (hashType&txscript.SigHashSingle) !=
 				txscript.SigHashSingle || i < len(payload.Output) {
 			script, err := txscript.SignTxOutput(params,
@@ -1554,6 +1559,7 @@ func SignRawTransaction(icmd interface{}) (interface{}, error) {
 				getScript, txIn.SignatureScript)
 			// Failure to sign isn't an error, it just means that
 			// the tx isn't complete.
+                        fmt.Println("-----------------1558-----------------------")
 			if err != nil {
 				signErrors = append(signErrors, SignatureError{
 					InputIndex: uint32(i),
